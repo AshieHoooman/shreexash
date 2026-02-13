@@ -78,7 +78,7 @@
 </head>
 <body>
 
-    <header>SHREEXASHIE Diaries</header>
+    <header>SHREE X ASHIE Diaries</header>
 
     <div class="container" id="main-card">
         <div id="pg1" class="page active">
@@ -130,7 +130,7 @@
             <h1 id="bunnyText">Here it comes... ❤️</h1>
             <div id="confessionOverlay" class="hidden"><span id="typingText" class="typing"></span></div>
             <div id="shadesContainer" class="hidden">
-                <h1 style="font-size: 1.4rem;">I love all the shades of you ❤️</h1>
+                <h1 style="font-size: 1.4rem;">Yea! I love all the shades of you lol. ( lots of love wala) ❤️</h1>
                 <button class="main-btn" style="background:#ff4d6d;" onclick="nextPage('pgForever')">not over yet click here</button>
             </div>
         </div>
@@ -149,7 +149,7 @@
             <h1 style="color:#d00000; font-size: 1.5rem; margin: 0;">I'VE LOVED YOU YESTERDAY ❣️<br> I LOVE YOU NOW 💘<br> I'LL LOVE YOU TOM 💕</h1>
             <div id="dateTimeDisplay" style="margin: 15px 0; font-weight: 700; color: #333; font-size: 1.1rem; border-top: 1px solid #ffccd5; border-bottom: 1px solid #ffccd5; padding: 10px 0;"></div>
             <h2 style="font-size: 1.1rem; margin-top: 5px;">HAPPY VALENTINE'S DAY! HOPE YOU ARE SMILING</h2>
-            <p style="font-size: 0.9rem;">YOU ARE THE BEST THING THAT HAPPENED THIS YEAR.</p>
+            <p style="font-size: 0.9rem;">YOU ARE THE BEST THING THAT HAPPENED THIS YEAR.<br> I started this at 11:30 am today and finshed exactly at 5:21pm. ik its really nth but i did it all on my own no chat gpt or any readymade designs used. ik tu soch rhi ki what is this? tbh this is wht m gud at and meko smj ni aa rha tha kya kru cuz i suck at everything irl cookin to not possible rn cuz of dist so yea. dw ill cook for u as well when we meet. </p>
             <div class="final-box">TEXT ME NOW WITH THE SCREENSHOT FOR SURPRISE 2 ❤️</div>
         </div>
     </div>
@@ -187,7 +187,7 @@
             if (attempts === 1) fb.innerText = "IMPOSTER!! SHOOO I'm committed";
             else if (attempts === 2) fb.innerText = "She wrote me i love u 100 times yesterday. I won't betray her. Go away!";
             else {
-                if(name === "shree") {
+                if(name === "shree" || name ==="banashree") {
                     document.getElementById('nameEntryArea').classList.add('hidden');
                     fb.innerHTML = `Accha ji! Ap ho baccha? Sorry mene ni pehchana. Welcome to awesomeness! 👀✨<br><br> <button class="main-btn" onclick="nextPage('pg3')">Next</button>`;
                 } else {
@@ -324,7 +324,7 @@
                     msg.innerText = `YES METER:(${yesMisses - 2}/11)`;
                 } else if (!consequencesPhase) {
                     consequencesPhase = true; yes.style.position = "static"; yes.style.transform = "scale(1.3)";
-                    msg.innerHTML = `<span style="color:red; font-size: 0.85rem;">BE CAREFUL ON THIS ONE. This click will have consequences you can't run away from.<br><br>Pro Tip: Do not click the button.</span>`;
+                    msg.innerHTML = `<span style="color:red; font-size: 0.85rem;">BE CAREFUL ON THIS ONE. This click will have consequences you can't run away from.<br><br>Pro Tip: Do not click the button.<br> CLick on the perfect time and take ss of wtv u see next</span>`;
                 } else {
                     yes.style.display = 'none';
                     msg.innerHTML = `<div class="meter-container"><div class="meter-roll"><div>1/11</div><div>5/11</div><div>8/11</div><div>10/11</div><div>11/11</div></div></div>`;
@@ -366,3 +366,4 @@
     </script>
 </body>
 </html>
+
