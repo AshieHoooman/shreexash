@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Baccha ❤️</title>
+    <style>
+        body {
+            margin: 0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            background: #ffffff; color: #333; height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden; text-align: center; transition: background 0.5s;
+        }
+        .container {
+            background: white; border: 2px solid #ff0000; border-radius: 20px;
+            padding: 25px; width: 85%; max-width: 400px;
+            box-shadow: 0 15px 40px rgba(255, 0, 0, 0.1); position: relative; z-index: 10;
+        }
+        .page { display: none; }
+        .active { display: block; animation: fadeIn 0.8s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
+        .shake { animation: shake 0.4s ease-in-out; }
+
+        .header-text { font-weight: 700; color: #d00000; font-size: 1.6rem; margin-bottom: 20px; }
+        
+        button { transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; border: none; }
+        button:hover { transform: scale(1.05); }
+
+        .main-btn { background: #d00000; color: white; padding: 12px 25px; border-radius: 30px; font-weight: 600; margin: 10px; font-size: 1rem; }
+        
+        .hidden { display: none !important; }
+        #confessionOverlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            font-size: clamp(1.1rem, 5vw, 2.2rem); font-weight: 900; z-index: 5000; padding: 20px; box-sizing: border-box;
+        }
+        .typing::after { content: '|'; animation: blink 0.7s infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        .btn-wrap { height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; margin-top: 10px; }
+        #yesBtn { z-index: 11; position: relative; }
+        #noBtn { z-index: 10; position: relative; margin-top: 20px; }
+        
+        .reason-group { margin: 12px 0; text-align: left; }
+        .reason-input { width: 92%; padding: 10px; border: 1px solid #ffb3c1; border-radius: 8px; font-family: inherit; font-size: 0.9rem; }
+        .char-count { font-size: 0.75rem; color: #d00000; font-weight: bold; margin-left: 5px; }
+        .valid-count { color: #28a745; }
+        .final-box { border: 2px dashed #ff0000; padding: 15px; margin-top: 20px; font-weight: 700; background: #fffafa; border-radius: 10px; font-size: 0.9rem; }
+        
+        #muteToggle { position: fixed; bottom: 10px; right: 10px; z-index: 6000; background: rgba(255,255,255,0.7); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; border: 1px solid #ffb3c1; }
+    </style>
+</head>
+<body>
+
+    <iframe id="romanticSong" width="0" height="0" src="https://www.youtube.com/embed/jfKfPfyJRdk?enablejsapi=1&autoplay=1&loop=1&playlist=jfKfPfyJRdk" frameborder="0" allow="autoplay"></iframe>
+    <div id="muteToggle" onclick="toggleMute()">🎵</div>
+
+    <div class="container" id="main-card">
+        <div id="pg1" class="page active">
+            <h1 class="header-text">Identity Verification ❤️</h1>
+            <div id="nameEntryArea">
+                <input type="text" id="nameInput" style="width:85%; padding:12px; border-radius:10px; border:1px solid #ccc;" placeholder="Enter your name...">
+                <button class="main-btn" onclick="verifyName()">Verify</button>
+            </div>
+            <p id="nameFeedback" style="color:#d00000; font-weight:600; font-size: 0.9rem;"></p>
+        </div>
+
+        <div id="pg3" class="page">
+            <h2 class="header-text">What do you think I like about you the most?</h2>
+            <div id="traitList" style="text-align:left; display:inline-block; margin:10px 0;">
+                <label style="display:block; margin: 8px 0;"><input type="radio" name="trait" class="trait-check"> Your face</label>
+                <label style="display:block; margin: 8px 0;"><input type="radio" name="trait" class="trait-check"> Your personality</label>
+                <label style="display:block; margin: 8px 0;"><input type="radio" name="trait" class="trait-check"> Your smile</label>
+                <label id="hiddenOption" class="hidden" style="display:block; margin: 8px 0;"><input type="checkbox" id="existenceCheck" disabled> Your existence</label>
+            </div><br>
+            <button id="traitConfirmBtn" class="main-btn" onclick="revealSequence()">Confirm</button>
+            <div id="existenceMessage" class="hidden">
+                <p style="text-align:left; font-style:italic; border-left:3px solid red; padding-left:10px; font-size: 0.9rem;">"I envy the wind that touches you. You are perfect the way you are."</p>
+                <button class="main-btn" onclick="nextPage('pgPartner')">Understood</button>
+            </div>
+        </div>
+
+        <div id="pgPartner" class="page">
+            <h1 class="header-text">Partner Registration</h1>
+            <p style="font-size: 0.9rem;">(acche se apne partner ka name sochlo cutie! baad me change ni kr skti)</p>
+            <input type="text" id="partnerInput" style="width:80%; padding:10px; border-radius:10px;" placeholder="His name...">
+            <button class="main-btn" onclick="handlePartnerFlow()">Register</button>
+        </div>
+
+        <div id="pgPrivate" class="page">
+            <h1 class="header-text">Declaration...</h1>
+            <p style="font-size: 0.95rem;">That's very bold darling. You came back to me. Now you are mine and I declare you private. ❤️</p>
+            <p style="font-size: 0.95rem;">I like to keep my private stuffs to myself.</p>
+            <button class="main-btn" onclick="nextPage('pgLikes')">Continue</button>
+        </div>
+
+        <div id="pgLikes" class="page">
+            <h2 style="font-size: 1.3rem;">3 things you like about me...</h2>
+            <div class="reason-group"><input type="text" class="reason-input" id="r1" placeholder="Reason 1" oninput="updateCount('r1', 'c1')"><span id="c1" class="char-count">0/25</span></div>
+            <div class="reason-group"><input type="text" class="reason-input" id="r2" placeholder="Reason 2" oninput="updateCount('r2', 'c2')"><span id="c2" class="char-count">0/25</span></div>
+            <div class="reason-group"><input type="text" class="reason-input" id="r3" placeholder="Reason 3" oninput="updateCount('r3', 'c3')"><span id="c3" class="char-count">0/25</span></div>
+            <button class="main-btn" onclick="validateReasons()">Next</button>
+        </div>
+
+        <div id="pgBunny" class="page">
+            <h1 id="bunnyText">Wait for it bunny... ❤️</h1>
+            <div id="confessionOverlay" class="hidden"><span id="typingText" class="typing"></span></div>
+            <div id="shadesContainer" class="hidden">
+                <h1 style="font-size: 1.5rem;">I love all the shades of you ❤️</h1>
+                <button class="main-btn" style="background:#ff4d6d;" onclick="nextPage('pgForever')">not over yet click here</button>
+            </div>
+        </div>
+
+        <div id="pgForever" class="page">
+            <h1 class="header-text" id="valHeader" style="font-size: 1.3rem;">WILL YOU BE MY VALENTINE FOREVER?</h1>
+            <p id="motivateMsg" style="color: #666; font-weight:bold; height: 30px; font-size: 0.9rem;"></p>
+            <div class="btn-wrap">
+                <button id="yesBtn" class="main-btn" onclick="handleYesClick()">YES</button>
+                <button id="noBtn" class="main-btn" onclick="handleNoClick()" style="background:#666; padding: 10px 25px;">NO</button>
+            </div>
+        </div>
+
+        <div id="pgFinal" class="page">
+            <h1 style="color:#d00000; font-size: 1.6rem; margin-bottom: 5px;">I LOVE YOU TOO BABY. ❤️</h1>
+            <h2 style="font-size: 1.1rem; margin-top: 5px;">HAPPY VALENTINE'S DAY! I KNOW YOU ARE SMILING</h2>
+            <p style="font-size: 0.9rem;">YOU ARE THE BEST THING THAT HAPPENED THIS YEAR.</p>
+            <div class="final-box">TEXT ME NOW WITH THE SCREENSHOT FOR SURPRISE 2 ❤️</div>
+        </div>
+    </div>
+
+    <script>
+        const nicknames = ["shree", "bunny", "kiddo", "shona", "pumpkin", "sunshine", "moon", "puchu", "baccha", "radha", "princess", "queen", "teddy bear", "cupcake", " jaan", "happiness", "tiktiki", "comfort zone", "painkiller", "everything", "other half"];
+        const emojis = ["💖", "🐰", "🐥", "✨", "🎃", "☀️", "🌙", "🍭", "🧸", "🌹", "👑", "🐝", "🍪", "🧁", "💍", "🍀", "🦎", "☁️", "💊", "🌍", "☯️"];
+        const bgColors = ["#ff4d6d", "#ff758c", "#c9184a", "#ffb3c1", "#d00000", "#800f2f", "#ffccd5", "#ff8fa3", "#ff4d6d", "#ff758c", "#c9184a", "#ffb3c1", "#d00000", "#800f2f", "#ffccd5", "#ff8fa3", "#ff4d6d", "#ff758c", "#c9184a", "#ffb3c1", "#d00000"];
+
+        let attempts = 0, noClicks = 0, isMuted = false;
+
+        function nextPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if(id === 'pgBunny') setTimeout(startTypingConfessions, 1500);
+        }
+
+        function verifyName() {
+            // FORCE START MUSIC
+            const music = document.getElementById('romanticSong');
+            music.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+            
+            attempts++;
+            const fb = document.getElementById('nameFeedback');
+            const card = document.getElementById('main-card');
+            card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+            
+            if (attempts === 1) fb.innerText = "Are you ok acche se socho and try again";
+            else if (attempts === 2) fb.innerText = "Are you ok baccha take it seriously";
+            else {
+                document.getElementById('nameEntryArea').classList.add('hidden');
+                fb.innerHTML = `nii ap mere baccha ho cutie 🥰 <br><br> <button class="main-btn" onclick="nextPage('pg3')">Next</button>`;
+            }
+        }
+
+        function updateCount(inputId, countId) {
+            const input = document.getElementById(inputId);
+            const countDisplay = document.getElementById(countId);
+            const len = input.value.length;
+            countDisplay.innerText = `${len}/25`;
+            if (len >= 25) countDisplay.classList.add('valid-count');
+            else countDisplay.classList.remove('valid-count');
+        }
+
+        function revealSequence() {
+            if(!document.querySelector('input[name="trait"]:checked')) return alert("Pick one!");
+            document.getElementById('traitConfirmBtn').classList.add('hidden');
+            document.getElementById('hiddenOption').classList.remove('hidden');
+            const checks = document.querySelectorAll('.trait-check');
+            checks.forEach((c, idx) => { setTimeout(() => { c.type = 'checkbox'; c.checked = true; }, (idx + 1) * 800); });
+            setTimeout(() => {
+                document.getElementById('existenceCheck').checked = true;
+                document.getElementById('existenceMessage').classList.remove('hidden');
+            }, (checks.length + 1) * 800);
+        }
+
+        function handlePartnerFlow() {
+            if(!confirm("Are you ok are you sure you don't want it to be your ex?")) nextPage('pgPartner');
+            else if(!confirm("Are you ok are you sure you don't want it to be your crush Mr. B?")) nextPage('pgPartner');
+            else nextPage('pgPrivate');
+        }
+
+        function validateReasons() {
+            const r1 = document.getElementById('r1').value.length;
+            const r2 = document.getElementById('r2').value.length;
+            const r3 = document.getElementById('r3').value.length;
+            if(r1 < 25 || r2 < 25 || r3 < 25) alert("Are you ok type more idiot");
+            else nextPage('pgBunny');
+        }
+
+        function startTypingConfessions() {
+            const overlay = document.getElementById('confessionOverlay');
+            const typingSpan = document.getElementById('typingText');
+            overlay.classList.remove('hidden');
+            let idx = 0;
+            function typeWriter(text, i, cb) {
+                if (i < text.length) { typingSpan.innerHTML = text.substring(0, i + 1); setTimeout(() => typeWriter(text, i + 1, cb), 80); } 
+                else { setTimeout(cb, 1200); }
+            }
+            function runLoop() {
+                if(idx < 21) {
+                    overlay.style.backgroundColor = bgColors[idx];
+                    overlay.style.color = (idx % 2 === 0) ? "#fff" : "#000";
+                    typeWriter("I LOVE YOU MY " + nicknames[idx].toUpperCase() + "!! " + emojis[idx], 0, () => { idx++; setTimeout(runLoop, 400); });
+                } else {
+                    overlay.classList.add('hidden'); document.getElementById('bunnyText').classList.add('hidden'); document.getElementById('shadesContainer').classList.remove('hidden');
+                }
+            }
+            runLoop();
+        }
+
+        function handleNoClick() {
+            noClicks++;
+            const no = document.getElementById('noBtn'), yes = document.getElementById('yesBtn'), msg = document.getElementById('motivateMsg');
+            if(noClicks === 1) msg.innerText = "Let's kill the no button. attack it!!";
+            else if(noClicks < 15) msg.innerText = "Don't stop now!";
+            else if(noClicks < 25) msg.innerText = "Almost there... keep attacking!";
+            yes.style.transform = `scale(${1 + (noClicks * 0.08)})`;
+            no.style.transform = `scale(${Math.max(0.4, 1 - (noClicks * 0.03))})`;
+            if(noClicks >= 25) { no.style.display = 'none'; msg.innerText = "Congrats you won! Claim the prize by clicking on yes"; yes.style.transform = "scale(1.2)"; }
+        }
+
+        function handleYesClick() {
+            if(noClicks === 0) alert("Are you ok don't be boring. click no");
+            else if(noClicks >= 25) nextPage('pgFinal');
+        }
+
+        function toggleMute() {
+            const music = document.getElementById('romanticSong');
+            isMuted = !isMuted;
+            music.contentWindow.postMessage(JSON.stringify({ event: 'command', func: isMuted ? 'mute' : 'unMute' }), '*');
+            document.getElementById('muteToggle').innerText = isMuted ? '🔇' : '🎵';
+        }
+    </script>
+</body>
+</html>
