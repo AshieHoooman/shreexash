@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>For My love ❤️</title>
     <style>
         body {
@@ -10,11 +10,13 @@
             background: #ffffff; color: #333; height: 100vh;
             display: flex; justify-content: center; align-items: center;
             overflow: hidden; text-align: center; transition: background 0.5s;
+            touch-action: manipulation; /* Prevents double-tap zoom on mobile */
         }
         .container {
             background: white; border: 2px solid #ff0000; border-radius: 20px;
-            padding: 25px; width: 85%; max-width: 400px;
+            padding: 20px; width: 88%; max-width: 400px;
             box-shadow: 0 15px 40px rgba(255, 0, 0, 0.1); position: relative; z-index: 10;
+            box-sizing: border-box;
         }
         .page { display: none; }
         .active { display: block; animation: fadeIn 0.8s ease; }
@@ -23,33 +25,45 @@
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-10px); } 75% { transform: translateX(10px); } }
         .shake { animation: shake 0.4s ease-in-out; }
 
-        .header-text { font-weight: 700; color: #d00000; font-size: 1.6rem; margin-bottom: 20px; }
+        .header-text { font-weight: 700; color: #d00000; font-size: clamp(1.2rem, 5vw, 1.6rem); margin-bottom: 20px; }
         
-        button { transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer; border: none; }
-        button:hover { transform: scale(1.05); }
-
+        button { transition: all 0.2s ease-out; cursor: pointer; border: none; -webkit-tap-highlight-color: transparent; }
         .main-btn { background: #d00000; color: white; padding: 12px 25px; border-radius: 30px; font-weight: 600; margin: 10px; font-size: 1rem; }
         
         .hidden { display: none !important; }
         #confessionOverlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             display: flex; align-items: center; justify-content: center;
-            font-size: clamp(1.1rem, 5vw, 2.2rem); font-weight: 900; z-index: 5000; padding: 20px; box-sizing: border-box;
+            font-size: clamp(1rem, 6vw, 2.5rem); font-weight: 900; z-index: 5000; padding: 20px; box-sizing: border-box;
         }
-        .typing::after { content: '|'; animation: blink 0.7s infinite; }
-        @keyframes blink { 50% { opacity: 0; } }
 
-        .btn-wrap { height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; margin-top: 10px; }
-        #yesBtn { z-index: 11; position: relative; }
-        #noBtn { z-index: 10; position: relative; margin-top: 20px; }
+        /* Prevents overlap: Flex column keeps items separated on mobile */
+        .btn-wrap { 
+            min-height: 280px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            position: relative; 
+            gap: 20px;
+        }
         
-        .reason-group { margin: 12px 0; text-align: left; }
-        .reason-input { width: 92%; padding: 10px; border: 1px solid #ffb3c1; border-radius: 8px; font-family: inherit; font-size: 0.9rem; }
+        #yesBtn { z-index: 11; position: relative; max-width: 90%; }
+        #noBtn { z-index: 10; position: relative; }
+        
+        .reason-input { width: 95%; padding: 10px; border: 1px solid #ffb3c1; border-radius: 8px; font-family: inherit; font-size: 0.9rem; margin: 8px 0; box-sizing: border-box; }
         .char-count { font-size: 0.75rem; color: #d00000; font-weight: bold; margin-left: 5px; }
         .valid-count { color: #28a745; }
-        .final-box { border: 2px dashed #ff0000; padding: 15px; margin-top: 20px; font-weight: 700; background: #fffafa; border-radius: 10px; font-size: 0.9rem; }
         
-        #muteToggle { position: fixed; bottom: 10px; right: 10px; z-index: 6000; background: rgba(255,255,255,0.7); border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; border: 1px solid #ffb3c1; }
+        /*#muteToggle { position: fixed; bottom: 15px; right: 15px; z-index: 6000; background: rgba(255,255,255,0.8); border-radius: 50%; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 22px; border: 1px solid #ffb3c1; }
+
+        /* Casino Meter Animation */
+        @keyframes roll {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-80%); }
+        }
+        .meter-container { height: 50px; overflow: hidden; font-size: 2rem; color: #d00000; font-weight: 900; margin: 15px 0; }
+        .meter-roll { display: flex; flex-direction: column; animation: roll 2s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards; }
     </style>
 </head>
 <body>
@@ -70,14 +84,14 @@
         <div id="pg3" class="page">
             <h2 class="header-text">What do you think I like about you the most?</h2>
             <div id="traitList" style="text-align:left; display:inline-block; margin:10px 0;">
-                <label style="display:block; margin: 8px 0;"><input type="radio" name="trait" class="trait-check"> Your face</label>
-                <label style="display:block; margin: 8px 0;"><input type="radio" name="trait" class="trait-check"> Your personality</label>
-                <label style="display:block; margin: 8px 0;"><input type="radio" name="trait" class="trait-check"> Your smile</label>
-                <label id="hiddenOption" class="hidden" style="display:block; margin: 8px 0;"><input type="checkbox" id="existenceCheck" disabled> Your existence</label>
+                <label style="display:block; margin: 10px 0;"><input type="radio" name="trait" class="trait-check"> Your face</label>
+                <label style="display:block; margin: 10px 0;"><input type="radio" name="trait" class="trait-check"> Your personality</label>
+                <label style="display:block; margin: 10px 0;"><input type="radio" name="trait" class="trait-check"> Your smile</label>
+                <label id="hiddenOption" class="hidden" style="display:block; margin: 10px 0;"><input type="checkbox" id="existenceCheck" disabled> Your existence</label>
             </div><br>
             <button id="traitConfirmBtn" class="main-btn" onclick="revealSequence()">Confirm</button>
             <div id="existenceMessage" class="hidden">
-                <p style="text-align:left; font-style:italic; border-left:3px solid red; padding-left:10px; font-size: 0.9rem;">" Seriously?I envy the wind that touches you. You are perfect the way you are. I love everything about you( except meri bby poo poo ni krti)"</p>
+                <p style="text-align:left; font-style:italic; border-left:3px solid red; padding-left:10px; font-size: 0.9rem;">" Seriously? I envy the wind that touches you. You are perfect the way you are. I love everything about you( except meri bby poo poo ni krti)"</p>
                 <button class="main-btn" onclick="nextPage('pgPartner')">Understood</button>
             </div>
         </div>
@@ -92,12 +106,11 @@
         <div id="pgPrivate" class="page">
             <h1 class="header-text">Declaration...</h1>
             <p style="font-size: 0.95rem;">That's very bold darling. You came back to me. Now you are mine and I declare you private. ❤️</p>
-            <p style="font-size: 0.95rem;">I like to keep my private stuffs to myself.</p>
             <button class="main-btn" onclick="nextPage('pgLikes')">Continue</button>
         </div>
 
         <div id="pgLikes" class="page">
-            <h2 style="font-size: 1.3rem;">3 things you like about me...</h2>
+            <h2 style="font-size: clamp(1.1rem, 4vw, 1.4rem);">3 things you like about me... (Take screenshot once filled)</h2>
             <div class="reason-group"><input type="text" class="reason-input" id="r1" placeholder="Reason 1" oninput="updateCount('r1', 'c1')"><span id="c1" class="char-count">0/25</span></div>
             <div class="reason-group"><input type="text" class="reason-input" id="r2" placeholder="Reason 2" oninput="updateCount('r2', 'c2')"><span id="c2" class="char-count">0/25</span></div>
             <div class="reason-group"><input type="text" class="reason-input" id="r3" placeholder="Reason 3" oninput="updateCount('r3', 'c3')"><span id="c3" class="char-count">0/25</span></div>
@@ -108,34 +121,35 @@
             <h1 id="bunnyText">Here it comes... ❤️</h1>
             <div id="confessionOverlay" class="hidden"><span id="typingText" class="typing"></span></div>
             <div id="shadesContainer" class="hidden">
-                <h1 style="font-size: 1.5rem;">I love all the shades of you ❤️</h1>
+                <h1 style="font-size: 1.4rem;">I love all the shades of you ❤️</h1>
                 <button class="main-btn" style="background:#ff4d6d;" onclick="nextPage('pgForever')">not over yet click here</button>
             </div>
         </div>
 
         <div id="pgForever" class="page">
-            <h1 class="header-text" id="valHeader" style="font-size: 1.3rem;">WILL YOU BE MY VALENTINE FOREVER?</h1>
-            <p id="motivateMsg" style="color: #666; font-weight:bold; height: 30px; font-size: 0.9rem;"></p>
+            <h1 class="header-text" id="valHeader">WILL YOU BE MY VALENTINE FOREVER?</h1>
+            <p id="motivateMsg" style="color: #666; font-weight:bold; min-height: 80px; font-size: 0.9rem; padding: 0 10px; display: flex; align-items: center; justify-content: center; flex-direction: column;"></p>
             <div class="btn-wrap">
-                <button id="yesBtn" class="main-btn" onclick="handleYesClick()">YES</button>
+                <button id="yesBtn" class="main-btn" onmouseover="handleYesHover()" ontouchstart="handleYesHover()" onclick="handleYesClick()">YES</button>
                 <button id="noBtn" class="main-btn" onclick="handleNoClick()" style="background:#666; padding: 10px 25px;">NO</button>
             </div>
         </div>
 
         <div id="pgFinal" class="page">
-            <h1 style="color:#d00000; font-size: 1.6rem; margin-bottom: 5px;">I LOVE YOU TOO BABY. ❤️</h1>
+            <h1 style="color:#d00000; font-size: clamp(1.3rem, 5vw, 1.8rem); margin-bottom: 5px;">I LOVE YOU TOO BABY. ❤️</h1>
             <h2 style="font-size: 1.1rem; margin-top: 5px;">HAPPY VALENTINE'S DAY! I KNOW YOU ARE SMILING</h2>
-            <p style="font-size: 0.9rem;">YOU ARE THE BEST THING THAT HAPPENED THIS YEAR.</p>
-            <div class="final-box">TEXT ME NOW WITH THE SCREENSHOT FOR SURPRISE 2 ❤️</div>
+            <p style="font-size: 0.85rem;">YOU ARE THE BEST THING THAT HAPPENED THIS YEAR.</p>
+            <div style="border: 2px dashed red; padding: 15px; margin-top: 15px; font-weight: 700; font-size: 0.85rem; border-radius: 10px;">TEXT ME NOW WITH THE SCREENSHOT FOR SURPRISE 2 ❤️</div>
         </div>
     </div>
 
     <script>
-        const nicknames = ["shree", "bunny", "kiddo", "shona", "pumpkin", "sunshine", "moon", "puchu", "baccha", "radha", "princess", "queen", "teddy bear", "cupcake", " jaan", "happiness", "tiktiki", "comfort zone", "painkiller", "everything", "other half"];
-        const emojis = ["💖", "🐰", "🐥", "✨", "🎃", "☀️", "🌙", "🍭", "🧸", "🌹", "👑", "🐝", "🍪", "🧁", "💍", "🍀", "🦎", "☁️", "💊", "🌍", "☯️"];
+        const nicknames = ["shree", "bunny", "kiddo", "shona", "pumpkin", "sunshine", "moonlight", "puchu", "baccha", "radhe", "princess", "queen", "teddy bear", "cupcake", " jaan", "happiness", "tiktiki", "comfort zone", "painkiller", "everything", "other half"];
+        const emojis = ["❣️", "🐰", "🐥", "✨", "🎃", "☀️", "🌙", "🍭", "👀", "🦚", "👑", "🙇‍♂️", "🧸", "🧁", "💍", "🍀", "🦎", "☁️", "💊", "🌍", "☯️"];
         const bgColors = ["#ff4d6d", "#ff758c", "#c9184a", "#ffb3c1", "#d00000", "#800f2f", "#ffccd5", "#ff8fa3", "#ff4d6d", "#ff758c", "#c9184a", "#ffb3c1", "#d00000", "#800f2f", "#ffccd5", "#ff8fa3", "#ff4d6d", "#ff758c", "#c9184a", "#ffb3c1", "#d00000"];
 
-        let attempts = 0, noClicks = 0, isMuted = false;
+        let attempts = 0, noClicks = 0, yesMisses = 0, isMuted = false, noDefeated = false;
+        let shieldActive = false, finalChaseActive = false, consequencesPhase = false;
 
         function nextPage(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -144,15 +158,12 @@
         }
 
         function verifyName() {
-            // FORCE START MUSIC
             const music = document.getElementById('romanticSong');
             music.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
-            
             attempts++;
             const fb = document.getElementById('nameFeedback');
             const card = document.getElementById('main-card');
             card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
-            
             if (attempts === 1) fb.innerText = "IMPOSTER!! SHOOO I'm committed";
             else if (attempts === 2) fb.innerText = "She wrote me i love u 100 times yesterday. I won't betray her. Go away!";
             else {
@@ -195,7 +206,6 @@
             else if(!confirm("Do you wish to proceed?")) nextPage('pgPartner');
             else if(!confirm("Are you sure? Action can't be undone or reversed. Final CALL!!")) nextPage('pgPartner');
             else if(!confirm("OKKKKKKKKKKKK YESSSSSSSS YOU HAVE REACHED ME! I LOVE U BABE! ")) nextPage('pgPartner'); 
-            
             else nextPage('pgPrivate');
         }
 
@@ -203,7 +213,7 @@
             const r1 = document.getElementById('r1').value.length;
             const r2 = document.getElementById('r2').value.length;
             const r3 = document.getElementById('r3').value.length;
-            if(r1 < 25 || r2 < 25 || r3 < 25) alert("Are you ok type more idiot");
+            if(r1 < 25 || r2 < 25 || r3 < 25) alert("Are you ok? type more idiot");
             else nextPage('pgBunny');
         }
 
@@ -229,19 +239,123 @@
         }
 
         function handleNoClick() {
+            if (noDefeated) return;
             noClicks++;
-            const no = document.getElementById('noBtn'), yes = document.getElementById('yesBtn'), msg = document.getElementById('motivateMsg');
+            const no = document.getElementById('noBtn'), yes = document.getElementById('yesBtn'), msg = document.getElementById('motivateMsg'), hdr = document.getElementById('valHeader');
+            
             if(noClicks === 1) msg.innerText = "Let's kill the no button. attack it!!";
-            else if(noClicks < 15) msg.innerText = "Don't stop now!";
+            else if(noClicks < 10) msg.innerText = "Don't stop now!";
             else if(noClicks < 25) msg.innerText = "Almost there... keep attacking!";
-            yes.style.transform = `scale(${1 + (noClicks * 0.08)})`;
-            no.style.transform = `scale(${Math.max(0.4, 1 - (noClicks * 0.03))})`;
-            if(noClicks >= 25) { no.style.display = 'none'; msg.innerText = "Congrats you won! Claim the prize by clicking on yes"; yes.style.transform = "scale(1.2)"; }
+            
+            if(noClicks <= 10) {
+                no.style.transform = `scale(${Math.max(0.4, 1 - (noClicks * 0.05))})`;
+                yes.style.transform = `scale(${Math.min(1.8, 1 + (noClicks * 0.08))})`;
+            } else {
+                moveButton(no);
+                yes.style.transform = `scale(${Math.min(1.8, 1 + (noClicks * 0.08))})`;
+            }
+
+            if(noClicks >= 25) { 
+                noDefeated = true;
+                no.style.display = 'none'; 
+                hdr.innerText = "No got defeated!! YAYYYYY!!!!!!";
+                msg.innerText = "Congrats you won! Claim the prize by clicking on yes"; 
+                yes.style.position = "static";
+                yes.style.transform = "scale(1.5)";
+            }
+        }
+
+        function handleYesHover() {
+            if ((shieldActive || (!shieldActive && !noDefeated)) && !consequencesPhase) {
+                moveButton(document.getElementById('yesBtn'));
+            }
         }
 
         function handleYesClick() {
-            if(noClicks === 0) alert("Are you ok don't be boring. click no");
-            else if(noClicks >= 25) nextPage('pgFinal');
+            const yes = document.getElementById('yesBtn');
+            const msg = document.getElementById('motivateMsg');
+            
+            if(!noDefeated) {
+                alert("Are you ok don't be boring. click no");
+                moveButton(yes);
+                return;
+            }
+
+            if(yesMisses === 0) {
+                yesMisses++;
+                yes.style.display = 'none';
+                msg.innerText = "YOU REALLY THOUGHT YOU WILL GET IT EASILY? BWAHAHAH NOW CATCH IT";
+                shieldActive = true;
+                
+                setTimeout(() => {
+                    yes.style.display = 'block';
+                    yes.style.position = "fixed";
+                    yes.style.transform = "scale(1)";
+                    moveButton(yes);
+                    setTimeout(() => {
+                        shieldActive = false;
+                        finalChaseActive = true;
+                        msg.innerText = "AWWW u still trying? koi nh since you want me that bad ofc you can have it but I need 11 yes!";
+                    }, 15000);
+                }, 1500);
+                return;
+            }
+
+            if(finalChaseActive) {
+                if(yesMisses < 12) {
+                    yesMisses++;
+                    moveButton(yes);
+                    msg.innerText = `YES METER:(${yesMisses - 2}/11)`;
+                } else if (!consequencesPhase) {
+                    consequencesPhase = true;
+                    yes.style.position = "static";
+                    yes.style.transform = "scale(1.3)";
+                    msg.innerHTML = `<span style="color:red; font-size: 0.85rem;">BE CAREFUL ON THIS ONE. This click will have consequences you can't run away from.<br><br>Pro Tip: Do not click the button.</span>`;
+                } else {
+                    yes.style.display = 'none';
+                    msg.innerHTML = `
+                        <div class="meter-container">
+                            <div class="meter-roll">
+                                <div>1/11</div><div>5/11</div><div>8/11</div><div>10/11</div><div>11/11</div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    setTimeout(() => {
+                        msg.innerHTML = `<div style="font-size: 1.2rem;">Processing<span id="dots"></span></div>`;
+                        animateDots('dots', 4000, () => {
+                            msg.innerHTML = `<div style="font-size: 1.2rem;">Activating<span id="dots2"></span></div>`;
+                            animateDots('dots2', 5000, () => {
+                                nextPage('pgFinal');
+                            });
+                        });
+                    }, 2500);
+                }
+            }
+        }
+
+        function animateDots(id, duration, callback) {
+            const el = document.getElementById(id);
+            if(!el) return;
+            let start = Date.now();
+            let timer = setInterval(() => {
+                let current = Date.now();
+                let count = Math.floor((current - start) / 500) % 4;
+                el.innerText = ".".repeat(count);
+                if (current - start >= duration) {
+                    clearInterval(timer);
+                    callback();
+                }
+            }, 100);
+        }
+
+        /*function moveButton(btn) {
+            btn.style.position = "fixed";
+            const maxX = window.innerWidth - btn.offsetWidth - 30;
+            const maxY = window.innerHeight - btn.offsetHeight - 30;
+            // Ensure button doesn't hide behind the container or off-screen
+            btn.style.left = Math.max(10, Math.floor(Math.random() * maxX)) + "px";
+            btn.style.top = Math.max(10, Math.floor(Math.random() * maxY)) + "px";
         }
 
         function toggleMute() {
@@ -249,8 +363,7 @@
             isMuted = !isMuted;
             music.contentWindow.postMessage(JSON.stringify({ event: 'command', func: isMuted ? 'mute' : 'unMute' }), '*');
             document.getElementById('muteToggle').innerText = isMuted ? '🔇' : '🎵';
-        }
+        }*/
     </script>
 </body>
 </html>
-
