@@ -4,13 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>For My love ❤️</title>
-	<header style="
-            position: fixed; top: 0; left: 0; width: 100%;
-            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255, 0, 0, 0.1);
-            padding: 15px 0; z-index: 1000;
-            font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;
-            color: #d00000; font-weight: 700;">SHREEXASHIE Diaries</header>
     <style>
         body {
             margin: 0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -19,12 +12,24 @@
             overflow: hidden; text-align: center; transition: background 0.5s;
             touch-action: manipulation;
         }
+
+        header {
+            position: fixed; top: 0; left: 0; width: 100%;
+            background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 0, 0, 0.1);
+            padding: 15px 0; z-index: 1000;
+            font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase;
+            color: #d00000; font-weight: 700;
+        }
+
         .container {
             background: white; border: 2px solid #ff0000; border-radius: 20px;
             padding: 20px; width: 88%; max-width: 400px;
             box-shadow: 0 15px 40px rgba(255, 0, 0, 0.1); position: relative; z-index: 10;
             box-sizing: border-box;
+            margin-top: 50px;
         }
+        
         .page { display: none; }
         .active { display: block; animation: fadeIn 0.8s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -46,7 +51,16 @@
         .typing::after { content: '|'; animation: blink 0.7s infinite; }
         @keyframes blink { 50% { opacity: 0; } }
 
-        .btn-wrap { height: 320px; display: flex; flex-direction: column; align-items: center; justify-content: space-around; position: relative; margin-top: 10px; }
+        .btn-wrap { 
+            min-height: 280px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            position: relative; 
+            gap: 30px; 
+        }
+        
         #yesBtn { z-index: 11; position: relative; max-width: 90%; }
         #noBtn { z-index: 10; position: relative; }
         
@@ -63,6 +77,8 @@
     </style>
 </head>
 <body>
+
+    <header>SHREEXASHIE Diaries</header>
 
     <div class="container" id="main-card">
         <div id="pg1" class="page active">
@@ -84,7 +100,7 @@
             </div><br>
             <button id="traitConfirmBtn" class="main-btn" onclick="revealSequence()">Confirm</button>
             <div id="existenceMessage" class="hidden">
-                <p style="text-align:left; font-style:italic; border-left:3px solid red; padding-left:10px; font-size: 0.9rem;">" Seriously? I envy the wind that touches you. You are perfect the way you are. I love everything about you( except meri bby poo poo ni krti)"</p>
+                <p style="text-align:left; font-style:italic; border-left:3px solid red; padding-left:10px; font-size: 0.9rem;">" Seriously? you picked only one?? I envy the wind that touches you. You are perfect the way you are. I love everything about you( except meri bby poo poo ni krti)"</p>
                 <button class="main-btn" onclick="nextPage('pgPartner')">Understood</button>
             </div>
         </div>
@@ -93,12 +109,12 @@
             <h1 class="header-text">Partner Registration</h1>
             <p style="font-size: 0.9rem;">(acche se apne partner ka name sochlo cutie! baad me change ni kr skti)</p>
             <input type="text" id="partnerInput" style="width:80%; padding:10px; border-radius:10px;" placeholder="His name...">
-            <button class="main-btn" onclick="handlePartnerFlow()">Register</button>
+            <button class="main-btn" onclick="triggerPartnerLogic()">Register</button>
         </div>
 
         <div id="pgPrivate" class="page">
             <h1 class="header-text">Declaration...</h1>
-            <p style="font-size: 0.95rem;">That's very bold darling. You came back to me. Now you are mine and I declare you private. ❤️</p>
+            <p style="font-size: 0.95rem;">That's very bold darling. You came back to me. Now you are mine and I declare you private. I like keeping my private stuffs to myself ❤️</p>
             <button class="main-btn" onclick="nextPage('pgLikes')">Continue</button>
         </div>
 
@@ -131,10 +147,8 @@
         <div id="pgFinal" class="page">
             <h1 style="color:#d00000; font-size: 1.3rem; margin-bottom: 5px;">My dear baby,</h1>
             <h1 style="color:#d00000; font-size: 1.5rem; margin: 0;">I'VE LOVED YOU YESTERDAY ❣️<br> I LOVE YOU NOW 💘<br> I'LL LOVE YOU TOM 💕</h1>
-            
             <div id="dateTimeDisplay" style="margin: 15px 0; font-weight: 700; color: #333; font-size: 1.1rem; border-top: 1px solid #ffccd5; border-bottom: 1px solid #ffccd5; padding: 10px 0;"></div>
-            
-            <h2 style="font-size: 1.1rem; margin-top: 5px;">HAPPY VALENTINE'S DAY! I KNOW YOU ARE SMILING</h2>
+            <h2 style="font-size: 1.1rem; margin-top: 5px;">HAPPY VALENTINE'S DAY! HOPE YOU ARE SMILING</h2>
             <p style="font-size: 0.9rem;">YOU ARE THE BEST THING THAT HAPPENED THIS YEAR.</p>
             <div class="final-box">TEXT ME NOW WITH THE SCREENSHOT FOR SURPRISE 2 ❤️</div>
         </div>
@@ -164,15 +178,49 @@
 
         function verifyName() {
             attempts++;
+            const name = document.getElementById('nameInput').value.toLowerCase().trim();
             const fb = document.getElementById('nameFeedback');
             const card = document.getElementById('main-card');
+            
             card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+            
             if (attempts === 1) fb.innerText = "IMPOSTER!! SHOOO I'm committed";
             else if (attempts === 2) fb.innerText = "She wrote me i love u 100 times yesterday. I won't betray her. Go away!";
             else {
-                document.getElementById('nameEntryArea').classList.add('hidden');
-                fb.innerHTML = `Accha ji! Ap ho baccha? Sorry mene ni pehchana. Welcome to awesomeness! 👀✨<br><br> <button class="main-btn" onclick="nextPage('pg3')">Next</button>`;
+                if(name === "shree") {
+                    document.getElementById('nameEntryArea').classList.add('hidden');
+                    fb.innerHTML = `Accha ji! Ap ho baccha? Sorry mene ni pehchana. Welcome to awesomeness! 👀✨<br><br> <button class="main-btn" onclick="nextPage('pg3')">Next</button>`;
+                } else {
+                    alert("try again");
+                }
             }
+        }
+
+        function triggerPartnerLogic() {
+            const name = document.getElementById('partnerInput').value.toLowerCase().trim();
+            const validNames = ["ash", "ashie", "akash", "akashjit", "akashjit sinha"];
+            
+            if (validNames.includes(name)) {
+                handlePartnerFlow();
+            } else {
+                alert("try again");
+            }
+        }
+
+        function handlePartnerFlow() {
+            if(!confirm("Are you ok with me and not your ex?")) nextPage('pgPartner');
+            else if(!confirm("Are you ok with choosing me over your crush Mr. B?")) nextPage('pgPartner');
+            else if(!confirm("Are you ok with my anger issues")) nextPage('pgPartner');
+            else if(!confirm("Are you ok with me being over obsessed to you")) nextPage('pgPartner');
+            else if(!confirm("Are you ok with me disturbing you?")) nextPage('pgPartner');
+            else if(!confirm("Are you ok with me clinging on to you?")) nextPage('pgPartner'); 
+            else if(!confirm("Are you ok with me as your other half?")) nextPage('pgPartner');
+            else if(!confirm("Are you ok with everything? (idk what to ask lol)")) nextPage('pgPartner');
+            else if(!confirm("I might hate you someday ( for short term ofc). Will u still stick to me and wait? IF yes, click ok")) nextPage('pgPartner'); 
+            else if(!confirm("Do you wish to proceed?")) nextPage('pgPartner');
+            else if(!confirm("Are you sure? Action can't be undone or reversed. Final CALL!!")) nextPage('pgPartner');
+            else if(!confirm("OKKKKKKKKKKKK YESSSSSSSS YOU HAVE REACHED ME! I LOVE U BABE! ")) nextPage('pgPartner'); 
+            else nextPage('pgPrivate');
         }
 
         function updateCount(inputId, countId) {
@@ -194,22 +242,6 @@
                 document.getElementById('existenceCheck').checked = true;
                 document.getElementById('existenceMessage').classList.remove('hidden');
             }, (checks.length + 1) * 800);
-        }
-
-        function handlePartnerFlow() {
-            if(!confirm("Are you ok with me and not your nex?")) nextPage('pgPartner');
-            else if(!confirm("Are you ok with choosing me over your crush Mr. B?")) nextPage('pgPartner');
-            else if(!confirm("Are you ok with my anger issues")) nextPage('pgPartner');
-            else if(!confirm("Are you ok with me being over obsessed to you")) nextPage('pgPartner');
-            else if(!confirm("Are you ok with me disturbing you?")) nextPage('pgPartner');
-            else if(!confirm("Are you ok with me clinging on to you?")) nextPage('pgPartner'); 
-            else if(!confirm("Are you ok with me as your other half?")) nextPage('pgPartner');
-            else if(!confirm("Are you ok with everything? (idk what to ask lol)")) nextPage('pgPartner');
-            else if(!confirm("I might hate you someday ( for short term ofc). Will u still stick to me and wait? IF yes, click ok")) nextPage('pgPartner'); 
-            else if(!confirm("Do you wish to proceed?")) nextPage('pgPartner');
-            else if(!confirm("Are you sure? Action can't be undone or reversed. Final CALL!!")) nextPage('pgPartner');
-            else if(!confirm("OKKKKKKKKKKKK YESSSSSSSS YOU HAVE REACHED ME! I LOVE U BABE! ")) nextPage('pgPartner'); 
-            else nextPage('pgPrivate');
         }
 
         function validateReasons() {
@@ -258,19 +290,15 @@
             }
 
             if(noClicks >= 25) { 
-                noDefeated = true;
-                no.style.display = 'none'; 
+                noDefeated = true; no.style.display = 'none'; 
                 hdr.innerText = "No got defeated!! YAYYYYY!!!!!!";
                 msg.innerText = "Congrats you won! Claim the prize by clicking on yes"; 
-                yes.style.position = "static";
-                yes.style.transform = "scale(1.5)";
+                yes.style.position = "static"; yes.style.transform = "scale(1.5)";
             }
         }
 
         function handleYesHover() {
-            if ((shieldActive || (!shieldActive && !noDefeated)) && !consequencesPhase) {
-                moveButton(document.getElementById('yesBtn'));
-            }
+            if ((shieldActive || (!shieldActive && !noDefeated)) && !consequencesPhase) moveButton(document.getElementById('yesBtn'));
         }
 
         function handleYesClick() {
@@ -279,33 +307,23 @@
             if(!noDefeated) { alert("Are you ok don't be boring. click no"); moveButton(yes); return; }
 
             if(yesMisses === 0) {
-                yesMisses++;
-                yes.style.display = 'none';
+                yesMisses++; yes.style.display = 'none';
                 msg.innerText = "YOU REALLY THOUGHT YOU WILL GET IT EASILY? BWAHAHAH NOW CATCH IT";
                 shieldActive = true;
                 setTimeout(() => {
-                    yes.style.display = 'block';
-                    yes.style.position = "fixed";
-                    yes.style.transform = "scale(1)";
-                    moveButton(yes);
-                    setTimeout(() => {
-                        shieldActive = false;
-                        finalChaseActive = true;
-                        msg.innerText = "AWWW u still trying? koi nh since you want me that bad ofc you can have it but I need 11 yes!";
-                    }, 15000);
+                    yes.style.display = 'block'; yes.style.position = "fixed";
+                    yes.style.transform = "scale(1)"; moveButton(yes);
+                    setTimeout(() => { shieldActive = false; finalChaseActive = true; msg.innerText = "AWWW u still trying? koi nh since you want me that bad ofc you can have it but I need 11 yes!"; }, 15000);
                 }, 1500);
                 return;
             }
 
             if(finalChaseActive) {
                 if(yesMisses < 12) {
-                    yesMisses++;
-                    moveButton(yes);
+                    yesMisses++; moveButton(yes);
                     msg.innerText = `YES METER:(${yesMisses - 2}/11)`;
                 } else if (!consequencesPhase) {
-                    consequencesPhase = true;
-                    yes.style.position = "static";
-                    yes.style.transform = "scale(1.3)";
+                    consequencesPhase = true; yes.style.position = "static"; yes.style.transform = "scale(1.3)";
                     msg.innerHTML = `<span style="color:red; font-size: 0.85rem;">BE CAREFUL ON THIS ONE. This click will have consequences you can't run away from.<br><br>Pro Tip: Do not click the button.</span>`;
                 } else {
                     yes.style.display = 'none';
@@ -314,7 +332,7 @@
                         msg.innerHTML = `<div style="font-size: 1.2rem;">Processing<span id="dots"></span></div>`;
                         animateDots('dots', 4000, () => {
                             msg.innerHTML = `<div style="font-size: 1.2rem;">Activating<span id="dots2"></span></div>`;
-                            animateDots('dots2', 5000, () => { nextPage('pgFinal'); });
+                            animateDots('dots2', 5000, () => nextPage('pgFinal'));
                         });
                     }, 2500);
                 }
@@ -322,23 +340,28 @@
         }
 
         function animateDots(id, duration, callback) {
-            const el = document.getElementById(id);
-            if(!el) return;
+            const el = document.getElementById(id); if(!el) return;
             let start = Date.now();
             let timer = setInterval(() => {
-                let current = Date.now();
-                let count = Math.floor((current - start) / 500) % 4;
+                let count = Math.floor((Date.now() - start) / 500) % 4;
                 el.innerText = ".".repeat(count);
-                if (current - start >= duration) { clearInterval(timer); callback(); }
+                if (Date.now() - start >= duration) { clearInterval(timer); callback(); }
             }, 100);
         }
 
         function moveButton(btn) {
             btn.style.position = "fixed";
-            const maxX = window.innerWidth - btn.offsetWidth - 30;
-            const maxY = window.innerHeight - btn.offsetHeight - 30;
+            const btnWidth = btn.offsetWidth;
+            const btnHeight = btn.offsetHeight;
+            const headerHeight = 60;
+            const footerHeight = 40;
+            
+            const maxX = window.innerWidth - btnWidth - 20;
+            const maxY = window.innerHeight - btnHeight - footerHeight - 20;
+            const minY = headerHeight + 20;
+
             btn.style.left = Math.max(10, Math.floor(Math.random() * maxX)) + "px";
-            btn.style.top = Math.max(10, Math.floor(Math.random() * maxY)) + "px";
+            btn.style.top = Math.max(minY, Math.floor(Math.random() * (maxY - minY) + minY)) + "px";
         }
     </script>
 </body>
